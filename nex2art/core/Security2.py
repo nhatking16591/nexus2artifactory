@@ -96,7 +96,7 @@ class Security2(object):
         xmlusers = xml.find('users')
         if xmlusers == None: return {}
         for userxml in xmlusers.findall('user'):
-            user = {'builtin': False}
+            user = {'builtin': False, 'realm': 'internal', 'roles': []}
             user['username'] = userxml.find('id').text
             if user['username'] == 'anonymous': continue
             self.log.debug("Extracting user %s", user['username'])
