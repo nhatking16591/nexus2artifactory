@@ -134,7 +134,7 @@ class Security3(object):
         privs, roles = [], []
         if role['privileges'] != None:
             for priv in role['privileges']:
-                if not priv.startswith('nx-repository-') or priv in privmap:
+                if not priv.startswith('nx-repository-') and priv in privmap:
                     privs.append(privmap[priv])
         roledata['privileges'] = privs
         for roleid in role['roles']: roles.append(roleid)
