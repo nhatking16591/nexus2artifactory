@@ -14,6 +14,10 @@ Currently, the following data can be migrated:
 - users, groups (roles), and permissions (privileges)
 - LDAP configurations
 
+Note that due to limitations in the REST API in Artifactory OSS, this tool can
+only migrate from licensed Artifactory distributions (Pro, Enterprise, etc). It
+does not work with free distributions (OSS, CE, etc).
+
 Installation
 ------------
 
