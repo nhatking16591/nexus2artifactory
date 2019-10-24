@@ -102,7 +102,7 @@ class Progress(object):
             msg += "\n\n Press 'q' to continue.\n\n"
             unicurses.waddstr(self.scr.win, msg)
             unicurses.flushinp()
-            while chr(self.scr.getch(self.scr.win)) != 'q': pass
+            while unichr(self.scr.getch(self.scr.win)) != 'q': pass
         elif mname != None:
             unicurses.waddstr(self.scr.win, "\n " + mname + " Progress:\n")
             self.renderProgress(mdone, mtotal)
