@@ -51,6 +51,7 @@ class Artifactory(object):
             self.initprogress(counts)
             cfg = "api/system/configuration"
             conn = self.setupconn()
+            self.usage(conn)
             if counts['password'] > 0:
                 self.log.info("Enabling password expiration.")
                 artxml = self.dorequest(conn, 'GET', cfg)
@@ -492,6 +493,14 @@ class Artifactory(object):
         ET.SubElement(lgrp, ns + 'strategy')
         ET.SubElement(lgrp, ns + 'enabledLdap')
         return ldap
+
+    def usage(self, conn):
+        cfg = 'api/system/usage'
+        body = {"productId":"Nexus2Artifactory/2.0.0","features":[]}
+        try:
+            result = self.dorequest(conn, 'POST', cfg, body)
+        except:
+            self.log.exception("Error sending usage information.")
 
     def checkArtifactory(self):
         state = self.scr.state["Initial Setup"]
