@@ -496,11 +496,19 @@ class Artifactory(object):
 
     def usage(self, conn):
         cfg = 'api/system/usage'
-        body = {"productId":"Nexus2Artifactory/2.0.0","features":[]}
+        body = {
+            "productId": "Nexus2Artifactory/2.0.0",
+            "features": [
+                {
+                    "featureId": "Nexus/" + str(self.scr.nexus.nexusversion)
+                }
+            ]
+        }
         try:
             result = self.dorequest(conn, 'POST', cfg, body)
         except:
-            self.log.exception("Error sending usage information.")
+            if self.log.getEffectiveLevel() == logging.DEBUG:
+                self.log.exception("Error sending usage information.")
 
     def checkArtifactory(self):
         state = self.scr.state["Initial Setup"]
