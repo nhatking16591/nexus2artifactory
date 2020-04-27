@@ -9,6 +9,7 @@ import urllib
 import urllib2
 import hashlib
 import threading
+import time
 from . import Maven, Docker, Gitlfs, Npm, Gems
 
 class PutRequest(urllib2.Request):
@@ -35,7 +36,9 @@ class Flush(object):
         self.lock1.release()
         self.lock2.acquire()
 
+MIGRATION_FROM=30
 class Upload(object):
+
     def __init__(self, scr, parent):
         self.log = logging.getLogger(__name__)
         self.scr = scr
@@ -89,6 +92,7 @@ class Upload(object):
         return url, headers
 
     def filelistgenerator2(self, conf):
+        global MIGRATION_FROM
         repomap = self.scr.nexus.repomap
         storage = os.path.join(self.scr.nexus.path, 'storage')
         for name, src in conf["Repository Migration Setup"].items():
@@ -123,8 +127,9 @@ class Upload(object):
                     def joinall(x): return os.path.join(f, x)
                     files.extend(map(joinall, os.listdir(ap)))
                 else:
-                    self.log.info("Found artifact for deployment: %s", f)
-                    yield ap, mp, src["Repo Name (Artifactory)"]
+                    if (time.time()- os.stat(ap).st_mtime) <= MIGRATION_FROM*86400 :
+                        self.log.info("Found artifact for deployment: %s", f)
+                        yield ap, mp, src["Repo Name (Artifactory)"]
 
     def filelistgenerator3(self, conf):
         repomap = self.scr.nexus.repomap
